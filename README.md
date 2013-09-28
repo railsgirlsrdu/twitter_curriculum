@@ -389,6 +389,8 @@ Create a Users controller using the rails generator.
 rails generate controller users
 ```
 
+Open the UsersController at `app/controllers/users_controller.rb`.
+
 :pencil:
 ```ruby
 class UsersController < ApplicationController

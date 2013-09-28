@@ -429,3 +429,82 @@ Next, add a link to your users show page by adding `link_to tweet.user.email, us
 ```
 
 Now we can click on the name of the user that makes a tweets to see all tweets made by that user. See this in action by going to the app and viewing all tweets and clicking on one of the user names: http://localhost:3000/
+
+### Let the world see your app
+
+Up until now, your Twitter app has been running on your laptop, only accessible to you. When you're ready for the world to see your work, or just to share your app with coworkers, you need to deploy it somewhere that's publicly accessible. [Heroku](http://heroku.com) is an application deployment platform that makes it easy to deploy apps. To deploy your app to Heroku, follow these steps:
+
+#### Create your Heroku account
+
+1. Sign up at https://id.heroku.com/signup/www-header (and confirm account email etc...)
+2. Install the Heroku Toolbelt: https://toolbelt.heroku.com/
+3. In *your terminal* run the following command to login into Heroku
+
+```console
+heroku login
+Enter your Heroku credentials.
+Email: adam@example.com
+Password: 
+Could not find an existing public key.
+Would you like to generate one? [Yn] 
+Generating new SSH public key.
+Uploading ssh public key /Users/adam/.ssh/id_rsa.pub
+```
+
+#### Update `Gemfile`
+
+Open up the `Gemfile` in your text editor. Change this line:
+
+```ruby
+gem 'sqlite3'
+```
+to
+```ruby
+group :development do
+  gem 'sqlite3'
+end
+```
+And add this new section:
+```ruby
+group :production do
+  gem 'pg'
+  gem 'rails_12factor'
+end
+```
+
+Update your dependencies by running this command in your terminal:
+
+```console
+bundle --without production
+```
+
+#### Deploy your app
+
+Setup `git` for your project. Run these commands in the terminal:
+
+```console
+git init
+echo "public/uploads" >> .gitignore
+echo "tmp" >> .gitignore
+echo "logs" >> .gitignore
+git add .
+git commit -m "initial commit"
+```
+
+Create your app on Heroku:
+
+```console
+heroku create
+```
+
+Deploy it:
+
+```console
+git push heroku master
+```
+
+Make sure your database on Heroku is configured for your app:
+
+```console
+heroku run rake db:migrate
+```

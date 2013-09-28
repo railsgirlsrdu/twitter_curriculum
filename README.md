@@ -453,18 +453,18 @@ Uploading ssh public key /Users/adam/.ssh/id_rsa.pub
 
 #### Update `Gemfile`
 
-Open up the `Gemfile` in your text editor. Change this line:
+Heroku requires that you use a different database than what you've been using in development. This database is called Postgresql. To configure your app to use Postgresql when on Heroku, open up the `Gemfile` in your text editor. Change this line:
 
 ```ruby
 gem 'sqlite3'
 ```
-to
+to this:
 ```ruby
 group :development do
   gem 'sqlite3'
 end
 ```
-And add this new section:
+And add a new section:
 ```ruby
 group :production do
   gem 'pg'
@@ -480,7 +480,7 @@ bundle --without production
 
 #### Deploy your app
 
-Setup `git` for your project. Run these commands in the terminal:
+Heroku uses a version-control system called Git to deploy apps from your laptop to its servers. To setup `git` for your project run these commands in the terminal:
 
 ```console
 git init
@@ -497,14 +497,35 @@ Create your app on Heroku:
 heroku create
 ```
 
-Deploy it:
+Deploy your app from your laptop to Heroku with this command:
 
 ```console
 git push heroku master
 ```
 
-Make sure your database on Heroku is configured for your app:
+And make sure your database on Heroku is configured for your app:
 
 ```console
 heroku run rake db:migrate
 ```
+
+`rake db:migrate` is the same command you've run on your laptop to configure your database, this command just runs it on your environment on Heroku.
+
+If you get an error that looks like this:
+
+```console
+$ heroku run rake db:migrate
+Running `rake db:migrate` attached to terminal... up, run.1600
+ !    
+ !    Error connecting to process
+```
+
+You're most probalby on a WIFI network that is blocking access on a port Heroku needs access to. (For RailsGirlsRDU, use WIFI `AmericanTobacco` and *not* `Visitor`)
+
+Once your database migrations have run, open your app on Heroku with this command:
+
+```console
+$ heroku open
+```
+
+You should see your Tweet app running at a URL like: `http://peaceful-mountain-9178.herokuapp.com/`. Since it's running against a fresh database, you will need to register a new user again to create Tweets.
